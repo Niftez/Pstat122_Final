@@ -1,13 +1,30 @@
 ---
 title: "PSTAT122_Final"
-format: html
+format: pdf
 editor: visual
 ---
+
+```{r Libraries}
+library(car)
+library(emmeans)
+library(ggplot2)
+library(dplyr)
+```
+
 
 ```{r}
 #Data
 data <- read.csv("Final_Data.csv")
 
 head(data)
+
+# randomizing assignments
+set.seed(21)
+
+text_settings <- c("black, small", "black, large", "red, small", "red, large")
+
+treatments <- rep(text_settings, each = 4)
+
+sample(treatments)
 ```
 
