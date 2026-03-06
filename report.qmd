@@ -38,7 +38,5 @@ treatments <- rep(text_settings, each = 4)
 
 sample(treatments)
 
-x <- c(1,2,3); x
-
 ```
 
