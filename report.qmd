@@ -13,7 +13,18 @@ library(dplyr)
 
 
 ```{r}
-#Data
+# randomizing assignments
+set.seed(21)
+
+text_settings <- c("black, small", "black, large", "red, small", "red, large")
+
+treatments <- rep(text_settings, each = 4)
+
+sample(treatments)
+```
+
+```{r}
+# data
 data <- read.csv("Final_Data.csv")
 
 head(data)
@@ -26,5 +37,8 @@ text_settings <- c("black, small", "black, large", "red, small", "red, large")
 treatments <- rep(text_settings, each = 4)
 
 sample(treatments)
+
+x <- c(1,2,3); x
+
 ```
 
