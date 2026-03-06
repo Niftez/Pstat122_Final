@@ -1,6 +1,6 @@
 ---
 title: "PSTAT122_Final"
-format: html
+format: pdf
 editor: visual
 ---
 
