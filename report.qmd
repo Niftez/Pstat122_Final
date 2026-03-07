@@ -112,12 +112,22 @@ read_speed$`Font Size` <- factor(read_speed$`Font Size`,
 kable(read_speed)
 ```
 ```{r}
+summary_stats <- read_speed |>
+  group_by(`Font Color`, `Font Size`) |>
+  summarise(
+    Mean = round(mean(Time), 2),
+    SD   = round(sd(Time), 2),
+    N    = n(),
+    .groups = "drop"
+  )
+
 kable(summary_stats,
       col.names = c("Font Color", "Font Size", "Mean (s)", "SD (s)", "N"),
       caption   = "Table 1: Summary Statistics of Reading Time by Treatment Group",
       align     = c("l", "l", "c", "c", "c"),
       digits    = 2,
       format    = "pipe")
+
 ```
 ```{r}
 interaction.plot(
