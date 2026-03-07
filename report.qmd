@@ -22,6 +22,7 @@ format:
 knitr::opts_chunk$set(message =  FALSE)
 knitr::opts_chunk$set(warning =  FALSE)
 knitr::opts_chunk$set(error =  FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
@@ -31,7 +32,7 @@ knitr::opts_chunk$set(error =  FALSE)
 <div style="text-align: center">
 <span style="color: blue;"> **STUDENT NAME **</span> 
 </div>
-- Ethan Anghelache    (NetID 1)
+- Ethan Anghelache    (A059728)
 - Miriam Montes    (NetID 2)
 - Joanna Sells    (NetID 3)
 - Saarah Solachuddin    (A0P1751)
@@ -140,8 +141,9 @@ interaction.plot(
   xlab          = "Font Size",
   ylab          = "Mean Reading Time (s)",
   trace.label   = "Font Color",
-  main          = "Interaction Plot of Font Size and Font Color on Reading Time"
+  main          = "Figure 1: Interaction Plot of Font Size and Font Color on Reading Time"
 )
+
 
 ```
 # Analysis
