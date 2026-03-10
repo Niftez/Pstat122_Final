@@ -22,7 +22,6 @@ format:
 knitr::opts_chunk$set(message =  FALSE)
 knitr::opts_chunk$set(warning =  FALSE)
 knitr::opts_chunk$set(error =  FALSE)
-knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
@@ -49,13 +48,16 @@ library(car)
 library(emmeans)
 library(tidyverse)
 library(knitr)
+library(broom)
 ```
 
 # Introduction
+
 -	Clear statement of the objective or research question.
 -	Brief context or motivation.
 
 # Experimental Design
+
 - Description of factors and treatment structure.
 - Clearly state what you are measuring and the units.
 Examples: Number of words recalled (count), reaction time (seconds), taste rating (1–5 scale).
@@ -67,8 +69,9 @@ Guideline: 5–10 per treatment for CRD, 3–5 blocks for RCBD, total feasible w
 
 (You are encouraged to explore more resources for determining the sample size )
 
+The data collection was randomized by using the following code and assigning the treatments to each participant on a Google sheet:
+
 ```{r}
-# randomization assignments
 set.seed(21)
 
 text_settings <- c("black, small", "black, large", "red, small", "red, large")
@@ -80,10 +83,12 @@ sample(treatments)
 
 
 # Data Collection
-The experiment was conducted at a residential home during midday. Participants were recruited from the experimenters' pool of roommates. Each participant was given a text excerpt that had been randomized per individual to control for order effects. Participants were instructed: "Read this excerpt at the usual reading speed at which you retain information well." Reading time was measured in seconds, beginning when the participant started reading and ending when they indicated they were finished.
 
+The experiment was conducted midday at each experimenter's residential home in a quiet room on March 6, 2026. Participants were recruited from the experimenters' pool of roommates. Each participant was given the same text excerpt with a specific text setting (e.g. red text color with large font size) that had been randomized and assigned per individual to control for order effects. Participants were instructed: "Read this excerpt at the usual reading speed at which you retain information well." Reading time was measured in seconds, beginning when the participant started reading and ending when they indicated they were finished.
 
 One limitation noted during data collection was that participants were not explicitly instructed whether to read silently or aloud. While all participants appeared to follow the general instructions, those who read silently may have unintentionally skimmed the text rather than reading at their true normal pace, potentially affecting the accuracy of the recorded times. The experiment was conducted in a quiet room to minimize external distractions. No trials were repeated, as the experiment was designed as a single-attempt format. Any natural variation in performance was considered part of the data. Timing was measured consistently using a phone timer, initiated by the researcher upon signaling "start" and stopped when the participant indicated "done."
+
+The following tables present our collected data---categorized by our two factors and each participants' reading speed---and our key summary statistics:
 
 ```{r}
 data <- read.csv("Final_Data.csv")
@@ -93,12 +98,10 @@ data <- read.csv("Final_Data.csv")
 # font size levels: small (-), large (+)
 
 read_speed <- data |>
-  mutate(
-    `Font Color` = str_detect(Text.Settings, "red, small") | str_detect(Text.Settings, "red, large"),
-    `Font Size`  = str_detect(Text.Settings, "black, large") | str_detect(Text.Settings, "red, large")
-  ) |>
-  rename(Time = Time..s.) |>
-  select(Person, `Font Color`, `Font Size`, Time)
+  mutate("Font Color" = str_detect(Text.Settings, "red, small") | str_detect(Text.Settings, "red, large"),
+         "Font Size" = str_detect(Text.Settings, "black, large") | str_detect(Text.Settings, "red, large")) |>
+  rename("Time" = Time..s.) |>
+  select(`Font Size`, `Font Color`,  `Time`)
 
 read_speed$`Font Color` <- factor(read_speed$`Font Color`,
                                   levels = c(TRUE, FALSE),
@@ -108,48 +111,31 @@ read_speed$`Font Size` <- factor(read_speed$`Font Size`,
                                  levels = c(TRUE, FALSE),
                                  labels = c("Large", "Small"))
 
-kable(read_speed)
+kable(read_speed,
+      caption = "Reading Time by Factors Data Collection")
 ```
+
+
 ```{r}
 summary_stats <- read_speed |>
-  group_by(`Font Color`, `Font Size`) |>
+  group_by(`Font Size`, `Font Color`) |>
   summarise(
     Mean = round(mean(Time), 2),
     SD   = round(sd(Time), 2),
-    N    = n(),
-    .groups = "drop"
+    N    = n()
   )
 
 kable(summary_stats,
-      col.names = c("Font Color", "Font Size", "Mean (s)", "SD (s)", "N"),
-      caption   = "Table 1: Summary Statistics of Reading Time by Treatment Group",
-      align     = c("l", "l", "c", "c", "c"),
-      digits    = 2,
-      format    = "pipe")
+      col.names = c("Font Size", "Font Color", "Mean (s)", "SD (s)", "N"),
+      caption = "Summary Statistics of Reading Time by Treatment Group")
 
 ```
-```{r}
-interaction.plot(
-  x.factor     = read_speed$`Font Size`,
-  trace.factor  = read_speed$`Font Color`,
-  response      = read_speed$Time,
-  fun           = mean,
-  type          = "b",
-  col           = c("red", "black"),
-  pch           = c(16, 17),
-  lty           = 1,
-  xlab          = "Font Size",
-  ylab          = "Mean Reading Time (s)",
-  trace.label   = "Font Color",
-  main          = "Figure 1: Interaction Plot of Font Size and Font Color on Reading Time"
-)
 
 
-```
 # Analysis
-Before conducting formal hypothesis testing, exploratory analysis was performed to understand the structure and variability of the data. Summary statistics were computed for each of the four treatment combinations (Table 1). Both the Red/Large and Black/Large groups yielded mean reading times of approximately 30 seconds (30.23s and 30.53s, respectively), while the Small font groups were noticeably faster — Red/Small averaged 20.87s and Black/Small averaged 18.14s. This initial inspection suggests that font size may have a meaningful effect on reading time, while font color appears to have a comparatively minor influence.
 
-The interaction plot (Figure 1) further supports this observation. The two lines — one for Red and one for Black — follow nearly the same downward trajectory from Large to Small font size, indicating little to no interaction between font color and font size. If a strong interaction were present, the lines would cross or diverge substantially. The near-parallel pattern suggests that the effect of font size on reading time is consistent regardless of font color. Taken together, the exploratory analysis points to font size as the primary driver of reading time, with font color playing a negligible role.
+- **Exploratory Data**: Start with basic statistics (mean, SD) and visualizations (e.g., boxplots) to understand the data.
+
 
 - **Hypothesis Testing**: Test your hypothesis with an appropriate statistical test (e.g., ANOVA).
 
@@ -157,16 +143,96 @@ The interaction plot (Figure 1) further supports this observation. The two lines
 
 -	Use `R` to analyze the data.
 
+## Exploratory Analysis
+
+Before conducting formal hypothesis testing, exploratory analysis was performed to understand the structure and variability of the data. Summary statistics were computed for each of the four treatment combinations (Table 2). Both the Red/Large and Black/Large groups yielded mean reading times of approximately 30 seconds (30.23s and 30.53s, respectively), while the Small font groups were noticeably faster---Red/Small averaged 20.87s and Black/Small averaged 18.14s. This initial inspection suggests that font size may have a meaningful effect on reading time, while font color appears to have a comparatively minor influence.
+
+These findings are visualized and supported through the following figure: 
+
+```{r}
+ggplot(read_speed, aes(x = `Font Size`, y = `Time`, fill = `Font Color`)) +
+  scale_fill_manual(values = c("red", "darkgray")) +
+  geom_boxplot() + 
+  labs(y = "Reading Time (s)",
+       title = "Figure 1: Reading Time Commparisons with Boxplots") +
+  theme_bw()
+```
+
+To further investigate our pre-test analysis, we gathered observations from the following interaction plot:
+
+```{r}
+ggplot(summary_stats, aes(x = `Font Size`, y = Mean, color = `Font Color`, group = `Font Color`)) +
+  scale_color_manual(values = c("red", "black")) +
+  geom_point() +
+  geom_line() +
+  labs(y = "Mean Reading Time (s)",
+       title = "Figure 2: Interaction Plot of Font Size and Font Color on Reading Time") + 
+  theme_bw()
+```
+
+The interaction plot (Figure 2) reads slightly differently from our previous observations. The two lines---one for Red and one for Black---follow nearly the same downward trajectory from Large to Small font size, however, the two lines intersect closer to the Large font size, indicating there is an interaction present as these lines are not parallel. The interaction suggests that when the font is Large, the font colors have little to no difference, but when the font is Small, Black font has a clearer advantage over Red font.
+
+Taken together, the exploratory analysis points to font size as the primary driver of reading time. However, given the interaction plot, there is a visual pattern to suggest font color does interact with font size, meaning font color is dependent on font size.
+
+## Hypothesis Testing
+
+To conduct our hypothesis testing for this $2^2$ factorial design experiment, we looked at three sets of hypotheses:
+
+:::callout
+1. The main effect of Font Size
+
+\begin{center}
+$H_0$: $\tau_i = 0$, $\forall i$
+
+$H_1$: $\exists$ $\tau_i \ne 0$
+
+$\tau_i$ represents the effect of font size and is tested for changes in the reading speed results on average.
+\end{center}
+
+2. The main effect of Font Color
+
+\begin{center}
+$H_0$: $\beta_j = 0$, $\forall j$
+
+$H_1$: $\exists$ $\beta_j \ne 0$
+
+$\beta_j$ represents the effect of font color and is tested for changes in the reading speed results on average.
+\end{center}
+
+3. The interaction effect of Font Size and Font Color
+
+\begin{center}
+$H_0$: $(\tau \beta)_{ij} = 0$ $\forall i, j$
+
+$H_1$: $\exists$ $(\tau \beta)_{ij} \ne 0$
+
+$(\tau \beta)_{ij}$ represents the combination of our two treatments, and we test if this combination creates a unique joint effect that they do not have alone.
+\end{center}
+:::
+
+A two-way ANOVA table tests our hypotheses simultaneously, as follows:
+
+```{r}
+anova <- aov(`Time` ~ `Font Size` * `Font Color`, read_speed)
+
+kable(tidy(anova),
+      digits = 3,
+      col.names = c("Sources of Variation", "degrees of freedom", "Sum of Squares", "Mean Square", "F", "p-value"),
+      caption = "ANOVA Table")
+```
+
 
 # Conclusions
+
 -	Summarize key findings.
 - Comment on limitations and possible improvements.
 
 
 # References
- (If needed.)
+
+- (If needed.)
 
 
 # Appendices
- 
- - `R` code.
+
+- `R` code.
