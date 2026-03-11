@@ -69,16 +69,16 @@ In this experiment, we will be testing if visual presentation variables (font, c
 
 ## Factors and Treatment Structure
 
-There are two treatments, font size and font color, with two levels each: black font or red font, in small text (10 pt) and large text (18 pt), creating four unique treatment combinations:
+There are two treatments, font size and font color, with two levels each: black font or red font, in small text or large text, creating four unique treatment combinations:
 
 :::callout
-Small (10 pt), red font
+- Small (10 pt), red font
 
-Large (18 pt), red font
+- Large (18 pt), red font
 
-Small (10 pt), black font
+- Small (10 pt), black font
 
-Large (18 pt), black font
+- Large (18 pt), black font
 :::
 
 ## Experimental Units
@@ -89,9 +89,11 @@ There are 16 individual readers. The response variable is the reading speeds mea
 
 This experiment will be conducted as a $2^2$ factorial design with a CRD framework, with two factors and two levels per factor:
 
-- Factor A: Font Size. This is a fixed factor, with two levels at 10 pt or 18 pt. 
+:::callout
+- Factor A: Font Size. This is a fixed factor, with two levels at 10 pt or 18 pt.
 
-- Factor B: Font Color. This is a fixed factor, also with two levels in red or black. 
+- Factor B: Font Color. This is a fixed factor, also with two levels in red or black.
+:::
 
 ## Sample Size
 
@@ -117,7 +119,7 @@ Therefore, the effects model can be expressed as: $$Y_{ijk} = \mu + \tau_i + \be
 
 ## Implementation
 
-To implement randomization, a list of 16 readers was compiled in no particular order on a Google sheet. Each participant was randomly assigned to one of the four treatment combinations using an `R` sampling code. This ensures that every participant had an equal probability of being assigned to any given treatment.\
+To implement randomization, a list of 16 readers was compiled in no particular order on a Google sheet. Each participant was randomly assigned to one of the four treatment combinations using an `R` sampling code. This ensures that every participant had an equal probability of being assigned to any given treatment.
 
 ```{r, include = FALSE}
 # randomizing assignments
@@ -137,7 +139,7 @@ sample(treatments)
 
 The experiment was conducted midday at each experimenter's residential home in a quiet room on March 6, 2026. Participants were recruited from the experimenters' pool of roommates. Each participant was given the same text excerpt with a specific text setting (e.g. red text color with large font size) that had been randomized and assigned per individual to control for order effects. Participants were instructed: "Read this excerpt at the usual reading speed at which you retain information well." Reading time was measured in seconds, beginning when the participant started reading and ending when they indicated they were finished.
 
-One limitation noted during data collection was that participants were not explicitly instructed whether to read silently or aloud. While all participants appeared to follow the general instructions, those who read silently may have unintentionally skimmed the text rather than reading at their true normal pace, potentially affecting the accuracy of the recorded times. The experiment was conducted in a quiet room to minimize external distractions. No trials were repeated, as the experiment was designed as a single-attempt format. Any natural variation in performance was considered part of the data. Timing was measured consistently using a phone timer, initiated by the researcher upon signaling "start" and stopped when the participant indicated "done."
+One limitation noted during data collection was that participants were not explicitly instructed whether to read silently or aloud. While all participants appeared to follow the general instructions, those who read silently may have unintentionally skimmed the text rather than reading at their true normal pace, potentially affecting the accuracy of the recorded times. The experiment was conducted in a quiet room to minimize external distractions. No trials were repeated, as the experiment was designed as a single-attempt format. Any natural variation in performance was considered part of the data. Timing was measured consistently using a phone timer, initiated by the experimenter upon signaling "start" and stopped when the participant indicated "done."
 
 The following tables present our collected data---categorized by our two factors and each participants' reading speed---and our key summary statistics:
 
