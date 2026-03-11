@@ -23,6 +23,7 @@ format:
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(error = FALSE)
+knitr::opts_chunk$set(echo = FALSE)  
 ```
 
 
@@ -124,7 +125,7 @@ The experiment was conducted midday at each experimenter's residential home in a
 
 One limitation noted during data collection was that participants were not explicitly instructed whether to read silently or aloud. While all participants appeared to follow the general instructions, those who read silently may have unintentionally skimmed the text rather than reading at their true normal pace, potentially affecting the accuracy of the recorded times. The experiment was conducted in a quiet room to minimize external distractions. No trials were repeated, as the experiment was designed as a single-attempt format. Any natural variation in performance was considered part of the data. Timing was measured consistently using a phone timer, initiated by the researcher upon signaling "start" and stopped when the participant indicated "done."
 
-The following tables present our collected data---categorized by our two factors and each participants' reading speed---and our key summary statistics:
+The following tables present our collected data are categorized by two factors and each participants' reading speed and key summary statistics:
 
 ```{r}
 data <- read.csv("Final_Data.csv")
@@ -277,4 +278,5 @@ From our resulting table, we can conclude that font size alone overall is the dr
 
 # Appendices
 
-- `R` code.
+```{r appendix, ref.label = knitr::all_labels(), echo = TRUE, eval = FALSE}
+```
