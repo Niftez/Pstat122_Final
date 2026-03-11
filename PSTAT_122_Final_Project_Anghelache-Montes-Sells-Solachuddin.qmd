@@ -56,11 +56,12 @@ library(broom)
 
 # Introduction
 
-The purpose of this experiment is to determine whether the visual characteristics of text influence reading speed. Specifically, we are investigating how two formatting factors, font size and color, affect the speed at which individuals read a short passage. In this experiment, we are using a $2^2$ factorial design to examine both the individual effects of font size (10 pt and 18 pt) and font color (black and red), as well as the potential interaction between these factors. The interaction effect would indicate whether the influence of one factor changes depending on the level of the other.
- 
-Text formatting plays an important role in readability, especially in today’s world where we regularly read information on both digital screens and printed materials. Differences in font size and color can affect visual clarity and may influence how quickly a reader moves through a passage. Since these formatting choices are commonly used in digital content, educational resources, professional documents, and more, understanding how they influence reading speed may help inform more effective visual design decisions to improve readability.
- 
-Previous research has also examined how font size affects reading speed. For example, a study by Scott B. Chandler at Virginia Tech tested participants reading text in different font sizes and found that larger font sizes were generally read more quickly than smaller ones. Based on these findings, we expect that passages presented in a larger font size (18 pt) will be read more quickly than those presented in a smaller font size (10 pt). We also expect that black text may lead to faster reading speeds than red text because it is the most commonly used color in standard reading materials.
+The purpose of this experiment is to determine whether the visual characteristics of text influence reading speed. Specifically, we are investigating how two formatting factors, font size and color, affect the speed at which individuals read a short passage. A $3^2$ factorial design is used to examine both the individual effects of font size (10 pt, 14pt and 18 pt) and font color (red, green and black), as well as the potential interaction between these factors. The interaction effect would indicate whether the influence of one factor changes depending on the level of the other.
+
+Text formatting plays an important role in readability, especially in today’s world where we regularly read information on both digital screens and printed materials. Differences in font size and color can affect visual clarity and may influence how quickly a reader can move through a passage. Since these formatting choices are commonly used in digital content, educational resources and professional documents, understanding how they influence reading speed may help inform more effective design decisions that improve readability.
+
+Previous research has also examined how font size affects reading speed. For example, a study by Scott B. Chandler at Virginia Tech tested participants reading text in different font sizes and found that larger font sizes were generally read more quickly than smaller ones. Based on these findings, we expect that passages presented in a larger font size will be read more quickly than those presented in a smaller font size. We also expect that black text may lead to faster reading speeds than red or green text because it is the most commonly used color in standard reading materials.
+
 
 
 # Experimental Design
