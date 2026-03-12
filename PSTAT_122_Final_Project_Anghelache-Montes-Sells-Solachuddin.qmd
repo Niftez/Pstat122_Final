@@ -304,6 +304,7 @@ Font color as a factor yielded a p-value of 0.102, a value larger than $\alpha$,
 
 Comparing the Legibility and Comprehension of Type Size, Font Selection and Rendering Technology of Onscreen Type (Scott B. Chandler) https://vtechworks.lib.vt.edu/server/api/core/bitstreams/4dc7b456-3ea7-4bca-93d4-d58b53101aed/content
 
+\newpage
 
 # Appendices
 
