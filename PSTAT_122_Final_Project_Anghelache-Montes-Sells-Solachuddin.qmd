@@ -154,7 +154,7 @@ The experiment was conducted midday at each experimenter's residential home in a
 
 One limitation noted during data collection was that participants were not explicitly instructed whether to read silently or aloud. While all participants appeared to follow the general instructions, those who read silently may have unintentionally skimmed the text rather than reading at their true normal pace, potentially affecting the accuracy of the recorded times. The experiment was conducted in a quiet room to minimize external distractions. No trials were repeated, as the experiment was designed as a single-attempt format. Any natural variation in performance was considered part of the data. Timing was measured consistently using a phone timer, initiated by the experimenter upon signaling "start" and stopped when the participant indicated "done."
 
-The following tables present our collected data---categorized by our two factors and each participants' reading speed---and our key summary statistics:
+The following tables present a portion of our collected data---categorized by our two factors and each participants' reading speed---and our key summary statistics:
 
 ```{r, echo = FALSE}
 # get factors in their own columns
@@ -176,7 +176,7 @@ read_speed <- data |>
   rename("Time" = Time..s.) |>
   select(`Font Size`, `Font Color`, `Time`)
 
-kable(read_speed,
+kable(head(read_speed, n = 9),
       caption = "Reading Time by Factors Data Collection")
 
 ```
@@ -203,7 +203,7 @@ kable(summary_stats,
 
 Before conducting formal hypothesis testing, exploratory analysis was performed to understand the structure and variability of the data. Summary statistics were computed for each of the four treatment combinations (Table 2). Reading speed seems to be quicker at a larger font, i.e. 14 pt and 18 pt, than in the smaller 10 pt font. It seems that font color has a very slight impact on the reading speed, in that when the font color is black, the average time is slightly shorter compared to its other levels per level of font size. This initial inspection suggests that font size may have a meaningful effect on reading time, while font color appears to have a comparatively minor influence.
 
-These findings are visualized and supported through the following figure: 
+We visualized these findings through the following figure: 
 
 ```{r, echo = FALSE, fig.align = "center"}
 # boxplots to compare means
@@ -218,11 +218,70 @@ ggplot(read_speed, aes(x = `Font Size`,
 
 ```
 
-To further investigate our pre-test analysis, we gathered observations from the following interaction plot:
+Since there are outliers present, we used the statistical outlier IQR rule to identify and remove these points from our data, resulting in the following figure:
+
+```{r, echo = FALSE, fig.align = 'center'}
+# remove outliers based on box plot
+outliers_sr <- read_speed |>
+  filter(`Font Size` == "Small", `Font Color` == "Red")
+
+q1_sr <- quantile(outliers_sr$Time, 0.25)
+q3_sr <- quantile(outliers_sr$Time, 0.75)
+iqr_sr <- q3_sr - q1_sr
+
+read_speed1 <- outliers_sr |>
+  filter(Time <= (q1_sr - (1.5 * iqr_sr)) | Time >= (q3_sr + (1.5 * iqr_sr)))
+
+outliers_sg <- read_speed |>
+  filter(`Font Size` == "Small", `Font Color` == "Green")
+
+q1_sg <- quantile(outliers_sg$Time, 0.25)
+q3_sg <- quantile(outliers_sg$Time, 0.75)
+iqr_sg <- q3_sg - q1_sg
+
+read_speed2 <- outliers_sg |>
+  filter(Time <= (q1_sg - (1.5 * iqr_sg)) | Time >= (q3_sg + (1.5 * iqr_sg)))
+
+outliers_mg <- read_speed |>
+  filter(`Font Size` == "Medium", `Font Color` == "Green")
+
+q1_mg <- quantile(outliers_mg$Time, 0.25)
+q3_mg <- quantile(outliers_mg$Time, 0.75)
+iqr_mg <- q3_mg - q1_mg
+
+read_speed3 <- outliers_mg |>
+  filter(Time <= (q1_mg - (1.5 * iqr_mg)) | Time >= (q3_mg + (1.5 * iqr_mg)))
+
+read_speed_clean <- read_speed |>
+  filter(Time != read_speed1$Time,
+         Time != read_speed2$Time[1],
+         Time != read_speed2$Time[2],
+         Time != read_speed3$Time)
+
+# read_speed_clean
+
+# new boxplot w/o outliers
+ggplot(read_speed_clean, aes(x = `Font Size`,
+                       y = `Time`,
+                       fill = `Font Color`)) +
+  scale_fill_manual(values = c("darkgray", "red", "green")) +
+  geom_boxplot() + 
+  labs(y = "Reading Time (s)",
+       title = "Figure 2: Reading Time Comparisons with Boxplots No Outliers") +
+  theme_bw()
+```
+
+To further investigate our pre-test analysis, we gathered observations from our new data without outliers using the following interaction plot:
 
 ```{r, echo = FALSE, fig.align = "center"}
 # interaction plot
-ggplot(summary_stats, aes(x = `Font Size`,
+summary_stats_clean <- read_speed_clean |>
+  group_by(`Font Size`, `Font Color`) |>
+  summarise(Mean = round(mean(Time), 2),
+            SD = round(sd(Time), 2),
+            N = n())
+
+ggplot(summary_stats_clean, aes(x = `Font Size`,
                           y = Mean,
                           color = `Font Color`,
                           group = `Font Color`)) +
@@ -230,14 +289,14 @@ ggplot(summary_stats, aes(x = `Font Size`,
   geom_point() +
   geom_line() +
   labs(y = "Mean Reading Time (s)",
-       title = "Figure 2: Interaction Plot of Font Size and Font Color") + 
+       title = "Figure 3: Interaction Plot of Font Size and Font Color") + 
   theme_bw()
 
 ```
 
-The interaction plot (Figure 2) expands on our previous observations. The three lines follow nearly the same trajectory from Small to Large font size. At no point do the lines intersect; they remain parallel throughout the trajectory, indicating there is no interaction present between our two factors. This allows us to look at our factors' main effects independently.
+The interaction plot (Figure 3) expands on our previous observations. The three lines follow nearly the same trajectory from Small to Large font size. At the medium level, green and red font intersect, suggesting that our factors may interact and be dependent to some extent; specifically, when our font size changes from small to large, the roles of red and green font switch, and red font makes for quicker reading speed (i.e. better readability) in comparison.
 
-Taken together, the exploratory analysis points to font size as the primary driver of a faster reading time, and font color plays a less significant role in an individual's reading speed. To verify these observations about our data, we will turn to hypothesis testing.
+Taken together, the exploratory analysis points to font size as the primary driver of a faster reading time, and font color plays a less significant role in an individual's reading speed. However, visual trends suggest there also may be an interaction between our factors. To verify these observations about our data, we will turn to hypothesis testing and a formal ANOVA test to determine any statistical significance of our observations.
 
 ## Hypothesis Testing
 
@@ -280,7 +339,7 @@ A two-way ANOVA table tests our hypotheses simultaneously, as follows:
 
 ```{r, echo = FALSE}
 # generate ANOVA table
-anova <- aov(`Time` ~ `Font Size` * `Font Color`, read_speed)
+anova <- aov(`Time` ~ `Font Size` * `Font Color`, read_speed_clean)
 
 kable(tidy(anova),
       digits = 3,
@@ -289,9 +348,9 @@ kable(tidy(anova),
 
 ```
 
-From our resulting table, we can conclude that font size alone overall is the driving factor of an individual's reading speed in our data. Font size yields a p-value of 0.003, a value smaller than our significance level $\alpha = 0.05$. Thus, we reject our null hypothesis ($H_0$) that font size at all levels has equal impact on an individual's reading speed, meaning there is a statistically significant difference between the impact of small, medium, and large font size on the time it takes to read. From our previous findings, we can also conclude that our data points to larger fonts in particular as what helps an individual read faster. Thus, our data has sufficient evidence to point to larger font having better readability.
+From our resulting table, we can conclude that font size alone overall is the driving factor of an individual's reading speed in our data. Font size yields a p-value of 0.000, a value smaller than our significance level $\alpha = 0.05$. Thus, we reject our null hypothesis ($H_0$) that font size at all levels has equal impact on an individual's reading speed, meaning there is a statistically significant difference between the impact of small, medium, and large font size on the time it takes to read. From our previous findings, we can also conclude that our data points to larger fonts in particular as what helps an individual read faster. Thus, our data has sufficient evidence to point to larger font having better readability.
 
-Font color as a factor yielded a p-value of 0.102, a value larger than $\alpha$, meaning we fail to reject the null hypothesis that there is no difference in impact on reading speed between the three levels, green, red, and black font. The interaction between our two factors yielded a p-value of 0.939, a value also larger than $\alpha$, indicating a failure to reject the null hypothesis, furthermore meaning there is no significant evidence of an interaction effect between the two in our data. Our two factors appear to behave independent of one other.
+Font color as a factor yielded a p-value of 0.105, a value larger than $\alpha$, meaning we fail to reject the null hypothesis that there is no difference in impact on reading speed between the three levels, green, red, and black font. The interaction between our two factors yielded a p-value of 0.692, a value also larger than $\alpha$, indicating a failure to reject the null hypothesis, furthermore meaning there is no significant evidence of an interaction effect between the two in our data. Our two factors appear to behave independent of one other.
 
 
 # Conclusions
