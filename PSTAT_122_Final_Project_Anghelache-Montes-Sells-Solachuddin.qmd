@@ -198,7 +198,7 @@ kable(summary_stats,
 
 # Analysis
 
-Following the removal of outliers and the collection of replacement observations, the dataset was reassembled in its final balanced form. The updated summary statistics and visualizations below reflect this cleaned dataset and serve as the basis for all subsequent formal analyses
+Following the removal of outliers and the collection of replacement observations, the dataset was reassembled in its final balanced form. This process is reflected below. The updated summary statistics and visualizations reflect this cleaned dataset and serve as the basis for all subsequent formal analyses.
 
 ## Exploratory Analysis
 
@@ -221,9 +221,9 @@ ggplot(read_speed, aes(x = `Font Size`,
 
 We visually identified four datapoints as outliers through this plot. Specifically, the minimum from treatment combination Small/Red, minimum and maximum from Small/Green, and maximum from Medium/Green were our outliers. Removing the minimum, maximum, or both from the treatment combinations identified by the boxplots as having outliers effectively uses the statistical outlier rule of 1.5 $\times$ IQR. Thus, we removed our outliers using this rule.
 
-This, however, created imbalance in our data. Thus, to keep our data balanced, we then produced new observations filling each treatment combination with missing values. These new observations were produced randomly and under identical experimental conditions to the initial data collection conditions.
+This, however, created an imbalance in our data. Thus, to keep our data balanced, we then produced new observations filling each treatment combination with missing values. These new observations were produced randomly and under identical experimental conditions to the initial data collection conditions.
 
-This process resulted in an updated dataset, still balanced, but now without outliers. The following shows updated summary statistics and boxplots:
+This process resulted in an updated dataset, still balanced, but now without outliers. The following shows updated summary statistics and boxplots using this updated dataset:
 
 ```{r, echo = FALSE, fig.align = 'center'}
 # remove outliers based on box plot
