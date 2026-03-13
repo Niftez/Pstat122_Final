@@ -307,7 +307,25 @@ Taken together, the exploratory analysis points to font size as the primary driv
 
 ## Hypothesis Testing
 
-To conduct our hypothesis testing for this $3^2$ factorial design experiment, we looked at three sets of hypotheses:
+To evaluate the effects of our factors and the interaction between them, we conducted a two-way ANOVA test at a significance level of $\alpha = 0.05$. This model to conduct this can be expressed as $$Y_{ijk} = \mu + \tau_i + \beta_j + (\tau\beta)_{ij}+ \epsilon_{ijk}$$ with i = 1, 2, 3; j = 1, 2, 3; k = 1, 2, 3, 4, 5, 6. The error term $\epsilon$ represents the variation between people.
+
+Before conducting any testing, we first checked for the necessary assumptions, normality and homoscedasticity. The plots below test these assumptions:
+
+```{r, echo = FALSE, fig.align = 'center'}
+anova <- aov(`Time` ~ `Font Size` * `Font Color`, read_speed_new)
+
+par(mfrow = c(1, 2))
+plot(anova, which = 1:3)
+
+hist(anova$residuals,
+     main = "Histogram of Residuals",
+     xlab = "Residuals",
+     col = "lightblue")
+```
+
+From the Residuals vs Fitted plot, we see our data may be heteroscedastic, due to the slight funnel shape of the points scattered; this is further supported by the downward trend of the scale-location plot, which suggests heteroscedasticity. The Q-Q plot shows the points mostly following the line, which suggests normality; our histogram further supports this, as it follows a mostly normal shape. Thus, the ANOVA assumption for normality does hold in this case, but homoscedasticity may not. We still use the ANOVA model for analysis due to its fit to our factorial design experiment.
+
+After checking assumptions, we began the testing. We looked at three sets of hypotheses for this $3^2$ factorial design experiment:
 
 :::callout
 1. The main effect of Font Size
@@ -315,9 +333,13 @@ To conduct our hypothesis testing for this $3^2$ factorial design experiment, we
 \begin{center}
 $H_0$: $\tau_i = 0$, $\forall i$
 
+There is no difference in reading speed on average between small, medium, and large font size settings.
+
 $H_1$: $\exists$ $\tau_i \ne 0$
 
-$\tau_i$ represents the effect of font size and is tested for changes in the reading speed results on average.
+At least one level of font size leads to a difference in reading speed on average.
+
+$\tau_i$ represents the effect of font size tested at all levels.
 \end{center}
 
 2. The main effect of Font Color
@@ -325,9 +347,13 @@ $\tau_i$ represents the effect of font size and is tested for changes in the rea
 \begin{center}
 $H_0$: $\beta_j = 0$, $\forall j$
 
+There is no difference in reading speed on average between green, red, and black font color settings.
+
 $H_1$: $\exists$ $\beta_j \ne 0$
 
-$\beta_j$ represents the effect of font color and is tested for changes in the reading speed results on average.
+At least one level of font colors leads to a difference in reading speed on average.
+
+$\beta_j$ represents the effect of font color tested at all levels.
 \end{center}
 
 3. The interaction effect of Font Size and Font Color
@@ -335,19 +361,21 @@ $\beta_j$ represents the effect of font color and is tested for changes in the r
 \begin{center}
 $H_0$: $(\tau \beta)_{ij} = 0$ $\forall i, j$
 
+The effect of font color on reading speed does not depend on the font size.
+
 $H_1$: $\exists$ $(\tau \beta)_{ij} \ne 0$
 
-$(\tau \beta)_{ij}$ represents the combination of our two treatments, and we test if this combination creates a unique joint effect that they do not have alone.
+The effect of font color on reading speed does depend on the font size.
+
+$(\tau \beta)_{ij}$ represents the combination of our two treatments tested at all levels to see if combinations create a unique joint effect that the factors do not have alone.
 \end{center}
 :::
 
 
-A two-way ANOVA table tests our hypotheses simultaneously, as follows:
+A two-way ANOVA test at a significance level of $\alpha = 0.05$ tests our hypotheses simultaneously, as follows:
 
 ```{r, echo = FALSE}
 # generate ANOVA table
-anova <- aov(`Time` ~ `Font Size` * `Font Color`, read_speed_new)
-
 kable(tidy(anova),
       digits = 3,
       col.names = c("Sources of Variation", "degrees of freedom", "Sum of Squares", "Mean Square", "F", "p-value"),
