@@ -58,48 +58,65 @@ Previous research has also examined how font size affects reading speed. For exa
 
 
 # Experimental Design
-In this experiment, we will be testing if visual presentation variables (font, color) significantly impact reading speed.
 
-## Factors Classification
+We are motivated to improve design choices for readability, thus we will be testing how visual text settings (font size, color) impact reading speed. Participants are instructed to read at the best fit speed at which information retention is highest for themselves. We define readability as the rate of reading words while maintaining a consistent level of comprehension, thus a faster rate means better readability in this experiment.
+
+## Factor Classification, Experimental Units, & Implementation 
 This experiment will be conducted as a $3^2$ factorial design with Completely Randomized Design (CRD) framework, where we have a total of 2 factors, each with 3 levels:
 
-- \textbf{Factor A:} Font Size. This is a fixed factor, with three levels at 10 pt, 14pt, or 18 pt. \newline
-- \textbf{Factor B:} Font Color. This is a fixed factor, also with three levels in green, red, or black.
+:::callout
+- Factor A: Font Size. This is a fixed factor, with three levels at 10 pt, 14 pt, or 18 pt.
 
-## Factors and Treatment Structure
-There are two treatments, font size and font color, with three levels each: black font, green font, or red font, in small text (10 pt), medium text (14pt), and large text (18 pt), which create nine unique treatment combinations:
+- Factor B: Font Color. This is a fixed factor, with three levels in green, red, or black.
+:::
+\
 
-| Font Color | Small Font | Medium Font | Large Font| 
-|------------|-------------------|-------------------|---|
-|Green|Green, 10 pt| Green, 14pt| Green, 18pt|
-| Red   | Red, 10 pt |Red, 14pt  | Red, 18pt   |
-| Black | Black 10 pt | Black, 14pt|Black, 18 pt |
+There are two treatments---font size and font color---with three levels each: in order from highest to lowest contrast against a white background, black, red, and green font, and in order from smallest to largest text, 10 pt, 14 pt, and 18 pt. This creates nine unique treatment combinations:
 
-## Sample Size
-Factor A has 3 levels $(a = 3)$, and Factor B has 3 levels $(b = 3)$. With nine different treatment combinations $(a\times b)$, we have a total of 54 observations. These observations were obtained by assigning 10 readers to three treatment combinations each and 6 readers to four combinations each through replication. This results in a balanced treatment design where there are an equal number of replicates $(n = 6)$ for each treatment combination such that:
-$$N = (n\times a \times b )= 6*3*3 =54\text{ total observations}$$
+:::callout
+- Small (10 pt), green font
 
-## Experimental Units
-The experimental units are 16 individual readers. The response variable is the reading speeds measured by the time taken (in seconds) to read the same 133-word excerpt in three or four of the different formatting styles.
+- Medium (14 pt), green font
 
-## Design Type: Balanced Completely Randomized Factorial Design
-When conducting this experiment, we did not use any blocking. With a total of 16 readers, we randomized the assignment of each treatment with a code in R and replicated the list of readers and an equal number of replications for each treatment combination.
+- Large (18 pt), green font
+
+- Small (10 pt), red font
+
+- Medium (14 pt), red font
+
+- Large (18 pt), red font
+
+- Small (10 pt), black font
+
+- Medium (14 pt), black font
+
+- Large (18 pt), black font
+:::
+\
+
+Factor A has three levels $(a = 3)$, and Factor B has three levels $(b = 3)$. With nine different treatment combinations $(a\times b)$, we have a total of 54 observations. These observations were obtained by assigning ten readers to three treatment combinations each and six readers to four combinations each through replication. This results in a balanced treatment design where there are an equal number of replicates $(n = 6)$ for each treatment combination such that: $$N = (n\times a \times b )= 6\times3\times3 =54\text{ total observations}$$
+
+Our experimental units are 16 individual readers spread out over 54 observations. To implement randomization, a list of our 16 readers was compiled in no particular order on a Google sheet. Each participant was randomly assigned treatment combinations using an `R` sampling code, found in the appendix. This ensures that every participant had an equal probability of being assigned to any given treatment. The response variable is the reading speeds measured by the time taken (in seconds) to read the same 133-word excerpt in three or four of the different formatting styles.
 
 ## Statistical Model
-For this completely randomized factorial design, we have 
 
-1. 3 levels for Factor A: Font Size
-2. 3 levels for Factor B: Font Color
-3. 6 replicates per treatment combination
+When conducting this experiment, we did not use any blocking. With a total of 16 readers, we randomized the assignment of each treatment with a code in R and replicated the list of readers and an equal number of replications for each treatment combination. For this balanced completely randomized factorial design, we have:
+
+:::callout
+1. Three levels for Factor A: Font Size
+
+2. Three levels for Factor B: Font Color
+
+3. Six replicates within each treatment combination
+:::
+\
 
 Therefore, the effects model can be expressed as:
 
 $$Y_{ijk} = \mu + \tau_i + \beta_j + (\tau\beta)_{ij}+ \epsilon_{ijk}$$ 
 with i = 1, 2, 3; j = 1, 2, 3; k = 1, 2, 3, 4, 5, 6.
-$(\tau\beta)_{ij}$ represents the interaction effect between front size and font color, and the random error term $\epsilon_{ijk}$ represents the random variation between observations, assumed to be normally distributed and iid.
 
-## Implementation
-To implement randomization, we created a list of 16 readers was compiled in no particular order. Each participant was randomly assigned treatment combinations using a sampling code in R. This ensures that every participant had an equal probability of being assigned to any given treatment.
+$(\tau\beta)_{ij}$ represents the interaction effect between front size and font color, and the random error term $\epsilon_{ijk}$ represents the random variation between observations, assumed to be normally distributed and i.i.d.
 
 
 # Data Collection
