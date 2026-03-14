@@ -69,6 +69,7 @@ This experiment will be conducted as a $3^2$ factorial design with Completely Ra
 
 - Factor B: Font Color. This is a fixed factor, with three levels in green, red, or black.
 :::
+\
 
 There are two treatments---font size and font color---with three levels each: in order from highest to lowest contrast against a white background, black, red, and green font, and in order from smallest to largest text, 10 pt, 14 pt, and 18 pt. This creates nine unique treatment combinations:
 
@@ -91,8 +92,9 @@ There are two treatments---font size and font color---with three levels each: in
 
 - Large (18 pt), black font
 :::
+\
 
-Factor A has three levels $(a = 3)$, and Factor B has three levels $(b = 3)$. With nine different treatment combinations $(a\times b)$, we have a total of 54 observations. These observations were obtained by assigning ten readers to three treatment combinations each and six readers to four combinations each through replication. This results in a balanced treatment design where there are an equal number of replicates $(n = 6)$ for each treatment combination such that: $$N = (n\times a \times b )= 6*3*3 =54\text{ total observations}$$
+Factor A has three levels $(a = 3)$, and Factor B has three levels $(b = 3)$. With nine different treatment combinations $(a\times b)$, we have a total of 54 observations. These observations were obtained by assigning ten readers to three treatment combinations each and six readers to four combinations each through replication. This results in a balanced treatment design where there are an equal number of replicates $(n = 6)$ for each treatment combination such that: $$N = (n\times a \times b )= 6\times3\times3 =54\text{ total observations}$$
 
 Our experimental units are 16 individual readers spread out over 54 observations. To implement randomization, a list of our 16 readers was compiled in no particular order on a Google sheet. Each participant was randomly assigned treatment combinations using an `R` sampling code, found in the appendix. This ensures that every participant had an equal probability of being assigned to any given treatment. The response variable is the reading speeds measured by the time taken (in seconds) to read the same 133-word excerpt in three or four of the different formatting styles.
 
@@ -107,6 +109,7 @@ When conducting this experiment, we did not use any blocking. With a total of 16
 
 3. Six replicates within each treatment combination
 :::
+\
 
 Therefore, the effects model can be expressed as:
 
@@ -153,10 +156,6 @@ read_speed <- data |>
 kable(head(read_speed, n = 9),
       caption = "Reading Time by Factors Data Collection")
 
-```
-
-
-```{r, echo = FALSE}
 # get key summary stats of our data
 summary_stats <- read_speed |>
   group_by(`Font Size`, `Font Color`) |>
@@ -172,7 +171,7 @@ kable(summary_stats,
 
 # Analysis
 
-Following the removal of outliers and the collection of replacement observations, the dataset was reassembled in its final balanced form. This process is reflected below. The updated summary statistics and visualizations reflect this cleaned dataset and serve as the basis for all subsequent formal analyses.
+As we conducted exploratory analysis, we found outliers in our data that we made the decision to remove. Following the removal of outliers and the collection of replacement observations to maintain balance, the dataset was reassembled in its final balanced form. This process is reflected below. The updated summary statistics and visualizations reflect this cleaned dataset and serve as the basis for all subsequent formal analyses.
 
 ## Exploratory Analysis
 
@@ -323,8 +322,8 @@ The effect of font color on reading speed does depend on the font size.
 $(\tau \beta)_{ij}$ represents the combination of our two treatments tested at all levels to see if combinations create a unique joint effect that the factors do not have alone.
 \end{center}
 :::
+\
 
-\newpage
 Before conducting any testing, we first checked for the necessary assumptions, normality and homoscedasticity. The plots below test these assumptions:
 
 ```{r, echo = FALSE, fig.align = 'center'}
@@ -337,6 +336,7 @@ hist(anova$residuals,
      main = "Histogram of Residuals",
      xlab = "Residuals",
      col = "lightblue")
+
 ```
 
 From the Residuals vs Fitted plot, we see our data may be heteroscedastic, due to the slight funnel shape of the points scattered; this is further supported by the downward trend of the scale-location plot, which suggests heteroscedasticity. The Q-Q plot shows the points mostly following the line, which suggests normality; our histogram further supports this, as it follows a mostly normal shape. Thus, the ANOVA assumption for normality does hold in this case, but homoscedasticity may not. We still use the ANOVA model for analysis due to its fit to our factorial design experiment.
